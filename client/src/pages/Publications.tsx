@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PublicationCard } from "@/components/PublicationCard";
+import { PublicationDetailModal } from "@/components/PublicationDetailModal";
 import { FilterPanel } from "@/components/FilterPanel";
 import { Button } from "@/components/ui/button";
 import { SlidersHorizontal } from "lucide-react";
@@ -64,6 +65,7 @@ const mockPublications = [
 
 export default function Publications() {
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedPublication, setSelectedPublication] = useState<typeof mockPublications[0] | null>(null);
 
   return (
     <div className="p-6 lg:p-8">
@@ -92,11 +94,21 @@ export default function Publications() {
         <div className={`${showFilters ? "lg:col-span-3" : "lg:col-span-4"}`}>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {mockPublications.map((pub) => (
-              <PublicationCard key={pub.id} {...pub} />
+              <PublicationCard 
+                key={pub.id} 
+                {...pub} 
+                onViewDetails={() => setSelectedPublication(pub)}
+              />
             ))}
           </div>
         </div>
       </div>
+
+      <PublicationDetailModal
+        publication={selectedPublication}
+        isOpen={!!selectedPublication}
+        onClose={() => setSelectedPublication(null)}
+      />
     </div>
   );
 }

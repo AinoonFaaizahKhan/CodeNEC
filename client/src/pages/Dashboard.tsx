@@ -4,6 +4,7 @@ import { StatsCard } from "@/components/StatsCard";
 import { PublicationCard } from "@/components/PublicationCard";
 import { TrendChart } from "@/components/TrendChart";
 import { KnowledgeGraph } from "@/components/KnowledgeGraph";
+import { PublicationDetailModal } from "@/components/PublicationDetailModal";
 import { UserRole } from "@/components/RoleSwitcher";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
@@ -45,6 +46,7 @@ const mockPublications = [
 
 export default function Dashboard({ role }: DashboardProps) {
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedPublication, setSelectedPublication] = useState<typeof mockPublications[0] | null>(null);
 
   const renderScientistView = () => (
     <div className="space-y-6">
@@ -57,7 +59,11 @@ export default function Dashboard({ role }: DashboardProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {mockPublications.map((pub) => (
-          <PublicationCard key={pub.id} {...pub} />
+          <PublicationCard 
+            key={pub.id} 
+            {...pub} 
+            onViewDetails={() => setSelectedPublication(pub)}
+          />
         ))}
       </div>
 
@@ -104,7 +110,11 @@ export default function Dashboard({ role }: DashboardProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {mockPublications.map((pub) => (
-          <PublicationCard key={pub.id} {...pub} />
+          <PublicationCard 
+            key={pub.id} 
+            {...pub} 
+            onViewDetails={() => setSelectedPublication(pub)}
+          />
         ))}
       </div>
 
@@ -143,6 +153,12 @@ export default function Dashboard({ role }: DashboardProps) {
       {role === "scientist" && renderScientistView()}
       {role === "manager" && renderManagerView()}
       {role === "architect" && renderArchitectView()}
+
+      <PublicationDetailModal
+        publication={selectedPublication}
+        isOpen={!!selectedPublication}
+        onClose={() => setSelectedPublication(null)}
+      />
     </div>
   );
 }
